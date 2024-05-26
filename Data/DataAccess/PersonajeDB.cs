@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CarlosRamosCRUD.Data.DataAccess
 {
@@ -104,10 +105,10 @@ namespace CarlosRamosCRUD.Data.DataAccess
         }
 
 
-       
+
 
         // Método para eliminar un personaje
-        public void EliminarPersonaje(int id)
+        public int EliminarPersonaje(int id)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -118,35 +119,42 @@ namespace CarlosRamosCRUD.Data.DataAccess
                 {
                     command.Parameters.AddWithValue("@id", id);
 
-                    command.ExecuteNonQuery();
+                    return command.ExecuteNonQuery();
                 }
             }
         }
 
 
+        // Método para buscar personajes por rango de fechas
+        public DataTable BuscarPorRangoDeFecha(DateTime fechaInicio, DateTime fechaFin)
 
-        //si da tiempo:
-        // Función para ejecutar consultas SQL genéricas
-        public DataTable EjecutarConsulta(string consultaSQL)
+
         {
-            DataTable resultado = new DataTable();
+            DataTable resultados = new DataTable();
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
 
-                using (MySqlCommand command = new MySqlCommand(consultaSQL, connection))
+                string sql = "SELECT * FROM personajes_dragon_ball WHERE fecha_creacion BETWEEN @fechaInicio AND @fechaFin";
+                using (MySqlCommand command = new MySqlCommand(sql, connection))
                 {
+                    command.Parameters.AddWithValue("@fechaInicio", fechaInicio);
+                    command.Parameters.AddWithValue("@fechaFin", fechaFin);
+
                     using (MySqlDataAdapter adapter = new MySqlDataAdapter(command))
                     {
-                        adapter.Fill(resultado);
+                        adapter.Fill(resultados);
                     }
                 }
             }
 
-            return resultado;
+            return resultados;
         }
+        
 
-      
+
+
+
     }
 }

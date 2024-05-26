@@ -98,6 +98,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\DataAccess\DateTimeME.cs" />
     <Compile Include="Data\DataAccess\PersonajeDB.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -132,9 +133,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="PasosTutorial.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

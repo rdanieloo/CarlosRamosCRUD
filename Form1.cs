@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Wfdb.Data.DataAccess;
+using CarlosRamosCRUD.Data.DataAccess;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
-namespace Wfdb
+namespace CarlosRamosCRUD
 {
     public partial class Form1 : Form
     {
@@ -28,6 +28,7 @@ namespace Wfdb
             "Saiyajin/Saiyajin"
         };
         private PersonajeDB personaje;
+      
 
         public Form1()
         {
@@ -45,7 +46,6 @@ namespace Wfdb
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Llenar el ComboBox con las razas
             comboBoxRaza.Items.AddRange(razasDragonBall);
         }
 
@@ -55,8 +55,12 @@ namespace Wfdb
             //string raza = comboBoxRaza.Text;
             string raza = textBoxRaza.Text;
             int nivelPoder = (int)numericUpDownNivelPoder.Value;
-            
-            int respuesta = personaje.CrearPersonaje(nombre, raza, nivelPoder);
+            DateTime fecha_creacion = dateTimePickerfecha_creacion.Value; 
+            string historia = textBoxHistoria.Text; 
+
+
+
+            int respuesta = personaje.CrearPersonaje(nombre, raza, nivelPoder,fecha_creacion, historia);
             if (respuesta > 0)
             {
                 MessageBox.Show("Personaje creado correctamente");
@@ -81,10 +85,13 @@ namespace Wfdb
                 string nombre = personajeEncontrado.Rows[0]["nombre"].ToString();
                 string raza = personajeEncontrado.Rows[0]["raza"].ToString();
                 int nivelPoder = int.Parse(personajeEncontrado.Rows[0]["nivel_poder"].ToString());
+                string historia = personajeEncontrado.Rows[0]["historia"].ToString();
                 textBoxNombre.Text = nombre;
                 textBoxRaza.Text = raza;
                 comboBoxRaza.Text = raza;
                 numericUpDownNivelPoder.Value = nivelPoder;
+                DateTime fecha_creacion = dateTimePickerfecha_creacion.Value;
+                textBoxHistoria.Text = historia;
             }
             else
             {
@@ -122,5 +129,122 @@ namespace Wfdb
                 MessageBox.Show("Error en la conexión");
             }
         }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBoxHistoria_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBoxNombre_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dateTimePickerfecha_creacion_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonEliminarPersonaje_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(textBoxID.Text))
+            {
+                MessageBox.Show("Por favor, ingresa el ID del personaje a eliminar.");
+                return;
+            }
+
+            int idPersonajeAEliminar;
+            if (!int.TryParse(textBoxID.Text, out idPersonajeAEliminar))
+            {
+                MessageBox.Show("Por favor, ingresa un ID válido.");
+                return;
+            }
+
+            int respuesta = personaje.EliminarPersonaje(idPersonajeAEliminar);
+            if (respuesta > 0)
+            {
+                MessageBox.Show("Personaje eliminado correctamente");
+                dataGridViewPersonajes.DataSource = personaje.LeerPersonajes();
+            }
+            else
+            {
+                MessageBox.Show("Error al eliminar el personaje o el personaje no existe.");
+            }
+
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void fechas_seleccionadas_DateChanged(object sender, DateRangeEventArgs e)
+        {
+            
+        }
+
+
+
+        private void botonBuscarPorFecha_Click(object sender, EventArgs e)
+        {
+            // Aca obtenemos las fechas seleccionadas del MonthCalendar o los DateTimePicker
+
+            DateTime fechaInicio = fechas_seleccionadas.SelectionStart;
+            DateTime fechaFin = fechas_seleccionadas.SelectionEnd;
+
+            // Crear una instancia de PersonajeDB con los argumentos adecuados
+
+            PersonajeDB personajeDB = new PersonajeDB("localhost", "root", "Ram0s.24CC19");
+
+            // Aca llamamos al metodo BuscarPorRangoDeFecha de nuestra clase PersonajeDB
+
+            DataTable resultadoBusqueda = personajeDB.BuscarPorRangoDeFecha(fechaInicio, fechaFin);
+
+            // Mostramos el resultado de la búsqueda en el DataGridView
+
+            dataGridViewPersonajes.DataSource = resultadoBusqueda;
+        }
+
     }
+
 }
